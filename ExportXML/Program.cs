@@ -182,43 +182,6 @@ namespace ExportXML
             _BazaKatalog = args[13];
             _BazaUser = args[14];
             _BazaPassword = args[15];
-                //            IP,//_AdresIPPortDB = args[0]; //??????
-                ////Portbaza,//_AdresMailNadawcy = args[?];
-                //Adres,//_AdresMailNadawcy = args[1];
-                //Haslo,//_HasloMailNadawcy = args[2];
-                //Mail,//_AdresMailAdresata = args[3];
-                //PortPoczta,//_PortNadawcy = args[4];
-                //Domena,//_AdresSMPTNadawcy = args[5];
-                //Nrfaktury,//_NrFaktury = args[6];
-                //sciezka,//_SciezkaDoPliku = args[7];
-                //TypPoczty,//_TypPoczty = args[8];
-                //PocztaLogin,// _PocztaLogin = args[9];
-                //Imie,//_Imie = args[10];
-                //Nazwisko,// _Nazwisko = args[11];
-                //SSL, // _SSL = args[12];
-                //KatalogBaza,// _KatalogBaza = args[13];
-                //LoginBaza,      // _LoginBaza = args[14];
-                //HasloBaza));     // _HasloBaza = args[15];
-
-
-
-
-
-
-
-            //_AdresIPPortDB = "192.168.251.232, 1444";
-            //_AdresMailNadawcy = "damian.kozlowski@hotmail.com";
-            //_HasloMailNadawcy = "Harpaganto0n";
-            //_AdresMailAdresata = "";
-            //_PortNadawcy = "587";
-            //_AdresSMPTNadawcy = "smtp.live.com";
-            //_NrFaktury = "1306";
-            //_SciezkaDoPliku = "C:\\_wydruk\\ExportXML1306.xml";
-            //_TypPoczty = "InnyDostawca";
-            //_PocztaLogin = "Damian";
-            //_Imie = "Damian";
-            //_Nazwisko = "Kozlowski";
-            // _SSL = true;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new WaitForm());
