@@ -45,29 +45,6 @@ namespace GranitSkarbGUI
 
         #region Zapis w Walucie
         #region Konstruktory
-        #region PrzeciazenieDla_ADV_Tree
-        //private bool CzyADVTree;
-        //
-        //GranitControls.GranitTreeView Konto;
-        //DevComponents.AdvTree.Node NodeKonto;
-
-
-        //public DialogStanKsiegiZapis(GranitControls.GranitTreeView Konta, string Rok)
-        //{
-        //    InitializeComponent();
-
-        //    Konto = Konta;
-        //    NodeKonto = Konta.SelectedNode;
-        //    RokKonta = Rok;
-        //    //string xyz = NodeWybraneKonto.Cells[0].Text;
-        //    CzyZapisKsiegowy = true;
-        //    CzyADVTree = true;
-        //    PobierzWinnMaWalADVtree();
-        //    //PobierzKonto();
-        //    //DevComponents.AdvTree.Node;
-
-        //}
-        #endregion
         /// <summary>
         /// Pobierz WinWal MaWal Konstruktor uzywany w MDI  Zapisy 
         /// </summary>
