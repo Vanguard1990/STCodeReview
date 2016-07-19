@@ -42,9 +42,30 @@ namespace GranitSkarbGUI
         private bool PerSaldo;
         #endregion
 
-
-        #region Zapis w Walucie
         #region Konstruktory
+        #region PrzeciazenieDla_ADV_Tree
+        //private bool CzyADVTree;
+        //
+        //GranitControls.GranitTreeView Konto;
+        //DevComponents.AdvTree.Node NodeKonto;
+
+
+        //public DialogStanKsiegiZapis(GranitControls.GranitTreeView Konta, string Rok)
+        //{
+        //    InitializeComponent();
+
+        //    Konto = Konta;
+        //    NodeKonto = Konta.SelectedNode;
+        //    RokKonta = Rok;
+        //    //string xyz = NodeWybraneKonto.Cells[0].Text;
+        //    CzyZapisKsiegowy = true;
+        //    CzyADVTree = true;
+        //    PobierzWinnMaWalADVtree();
+        //    //PobierzKonto();
+        //    //DevComponents.AdvTree.Node;
+
+        //}
+        #endregion
         /// <summary>
         /// Pobierz WinWal MaWal Konstruktor uzywany w MDI  Zapisy 
         /// </summary>
@@ -69,8 +90,61 @@ namespace GranitSkarbGUI
             }
         }
 
+        /// <summary>
+        /// Konstruktor używany w MDI Dokumenty
+        /// </summary>
+        /// <param name="_dataGridZapisyPerSaldo"></param>
+        /// <param name="CzyZapisCzyKonto"></param>
+        /// <param name="PerSaldo"></param>
+        public DialogStanKsiegiZapis(DataGridView _dataGridZapisyPerSaldo, bool PerSaldoo)
+        {
+            InitializeComponent();
+            try
+            {
+                _dataGridZapisy = _dataGridZapisyPerSaldo;
+                IndeksWiersza = _dataGridZapisyPerSaldo.CurrentRow.Index;
+                IDzapisu = _dataGridZapisy.CurrentRow.Cells["ID_ZAPISU"].Value.ToString();
+                PerSaldo = PerSaldoo;
+                granitButton6.Visible = true;
+                granitButton5.Visible = true;
+                CzyPaczka = false;
+                PobierzPerSaldoZapisyDokumentyKsiegowe();
+            }
+            catch (Exception ex)
+            {
+                DialogStatement.ShowError(ex.Message);
+            }
+        }
+        /// <summary>
+        /// Z Paczki. Konstruktor używany w MDI Dokumenty
+        /// </summary>
+        /// <param name="_dataGridDlaPerSaldo"></param>
+        /// <param name="CzyZapisCzyKonto"></param>
+        /// <param name="PerSaldo"></param>
+        public DialogStanKsiegiZapis(DataGridView _dataGridZapisyPerSaldo, bool PerSaldoo,bool CzyPaczzzka)
+        {
+            InitializeComponent();
+            try
+            {
+                this._dataGridZapisy = _dataGridZapisyPerSaldo;
+                this.IndeksWiersza = _dataGridZapisyPerSaldo.CurrentRow.Index;
+                this.IDzapisu = _dataGridZapisy.CurrentRow.Cells["ID_ZAPISU"].Value.ToString();
+                this.PerSaldo = PerSaldoo;
+                this.CzyPaczka = CzyPaczzzka;
+                this.granitButton6.Visible = true;
+                this.granitButton5.Visible = true;
+                
+                PobierzPerSaldoDokumentyPaczkaKsiegowe();
+
+            }
+            catch (Exception ex)
+            {
+                DialogStatement.ShowError(ex.Message);
+            }
+        }
 
         #endregion
+
         #region Metody
         // Każda metoda ma przystosowane nazwy kolumn do DataGridView zapisy. W MDI Dokumenty i MDI zapisy  DGV.Zapisy nazyw kolumn mogą się różnić. TO DO: Ujednolicić nazwy dla DGV_Zapisy we wszystkich MDI. Prawdopodobnie nazwy kolumn nadane automatycznie typu "pELNEKONTODataGridViewTextBoxColumn" nie są nigdzie indziej używane po za tym plikiem. Zachować szczególną ostrożnośc.
 
@@ -216,73 +290,6 @@ namespace GranitSkarbGUI
             }
         }
 
-
-        #endregion
-
-        #endregion
-
-        #region PerSaldo
-        #region Konstruktory
-
-
-        /// <summary>
-        /// Konstruktor używany w MDI Dokumenty
-        /// </summary>
-        /// <param name="_dataGridZapisyPerSaldo"></param>
-        /// <param name="CzyZapisCzyKonto"></param>
-        /// <param name="PerSaldo"></param>
-        public DialogStanKsiegiZapis(DataGridView _dataGridZapisyPerSaldo, bool PerSaldoo)
-        {
-            InitializeComponent();
-            try
-            {
-                _dataGridZapisy = _dataGridZapisyPerSaldo;
-                IndeksWiersza = _dataGridZapisyPerSaldo.CurrentRow.Index;
-                IDzapisu = _dataGridZapisy.CurrentRow.Cells["ID_ZAPISU"].Value.ToString();
-                PerSaldo = PerSaldoo;
-                granitButton6.Visible = true;
-                granitButton5.Visible = true;
-                CzyPaczka = false;
-                PobierzPerSaldoZapisyDokumentyKsiegowe();
-            }
-            catch (Exception ex)
-            {
-                DialogStatement.ShowError(ex.Message);
-            }
-        }
-        /// <summary>
-        /// Z Paczki. Konstruktor używany w MDI Dokumenty
-        /// </summary>
-        /// <param name="_dataGridDlaPerSaldo"></param>
-        /// <param name="CzyZapisCzyKonto"></param>
-        /// <param name="PerSaldo"></param>
-        public DialogStanKsiegiZapis(DataGridView _dataGridZapisyPerSaldo, DataGridView _dataGridDokumentyPerSaldo, bool PerSaldoo)
-        {
-            InitializeComponent();
-            try
-            {
-                this._dataGridZapisy = _dataGridZapisyPerSaldo;
-                this.IndeksWiersza = _dataGridDokumentyPerSaldo.CurrentRow.Index;
-                this._dataGridPerSaldoDokumenty = _dataGridDokumentyPerSaldo;
-                this.IDzapisu = _dataGridZapisy.CurrentRow.Cells["ID_ZAPISU"].Value.ToString();
-                this.IDdokumentu = _dataGridDokumentyPerSaldo.CurrentRow.Cells["ID_DOKUMENTU"].Value.ToString();
-                PerSaldo = PerSaldoo;
-                this.granitButton6.Visible = true;
-                this.granitButton5.Visible = true;
-                CzyPaczka = true;
-                PobierzPerSaldoDokumentyPaczkaKsiegowe();
-
-            }
-            catch (Exception ex)
-            {
-                DialogStatement.ShowError(ex.Message);
-            }
-        }
-
-
-        #endregion
-
-        #region Metody
         /// <summary>
         /// Funkcja przystosowana do MDI Dokumenty
         /// </summary>
@@ -296,9 +303,7 @@ namespace GranitSkarbGUI
                 NazwaKonta = _dataGridZapisy.Rows[IndeksWiersza].Cells["pELNANAZWAKONTADataGridViewTextBoxColumn"].Value.ToString();
                 TrescZapisu = _dataGridZapisy.Rows[IndeksWiersza].Cells["TRESC"].Value.ToString();
 
-
                 ObliczPerSaldoDokument();
-
 
                 if (PerSaldoWnMa > 0)
                 {
@@ -336,24 +341,8 @@ namespace GranitSkarbGUI
         {
             using (SqlConnection sqlConnection = new SqlConnection(Databases.SkarbDB.ConnectionString))
             {
+                PobierzDaneNaglowkowe(sqlConnection);
                 DataTable TablicaKonta = new DataTable();
-                sqlConnection.Open();
-                using (SqlCommand sqlSelect = new SqlCommand())
-                {
-                    sqlSelect.Connection = sqlConnection;
-                    sqlSelect.CommandText = @"SELECT PA.MIESIAC, ZK.ID_KONTA, ZK.ID_DOKUMENTU
-                                                FROM [T_FKD_ZAPIS_KSIEG] ZK
-                                                JOIN [T_FKD_DOKUMENTY] DOK ON DOK.ID_DOKUMENTU = ZK.ID_DOKUMENTU
-                                                JOIN [T_FKD_PACZKA] PA ON PA.ID_PACZKI = DOK.ID_PACZKI
-                                                WHERE ZK.ID_ZAPISU = @IDzapisu";
-                    sqlSelect.Parameters.AddWithValue("@IDzapisu", IDzapisu);
-                    TablicaKonta.Load(sqlSelect.ExecuteReader());
-
-                    MiesiacPaczki = TablicaKonta.Rows[0][0].ToString();
-                    IDkonta = TablicaKonta.Rows[0][1].ToString();
-                    IDdokumentu = TablicaKonta.Rows[0][2].ToString();
-                }
-                TablicaKonta = new DataTable();
                 using (SqlCommand sqlSelect = new SqlCommand())
                 {
                     sqlSelect.Connection = sqlConnection;
@@ -385,7 +374,10 @@ namespace GranitSkarbGUI
         {
             try
             {
-                _dataGridPerSaldoDokumenty.Rows[IndeksWiersza].Selected = true;
+                _dataGridZapisy.Rows[IndeksWiersza].Selected = true;
+                KontoNR = _dataGridZapisy.Rows[IndeksWiersza].Cells["KONTO"].Value.ToString();
+                NazwaKonta = _dataGridZapisy.Rows[IndeksWiersza].Cells["pELNANAZWAKONTADataGridViewTextBoxColumn"].Value.ToString();
+                TrescZapisu = _dataGridZapisy.Rows[IndeksWiersza].Cells["TRESC"].Value.ToString();
 
                 ObliczPerSaldoPaczka();
 
@@ -425,29 +417,8 @@ namespace GranitSkarbGUI
         {
             using (SqlConnection sqlConnection = new SqlConnection(Databases.SkarbDB.ConnectionString))
             {
+                PobierzDaneNaglowkowe(sqlConnection);
                 DataTable TablicaKonta = new DataTable();
-                sqlConnection.Open();
-                using (SqlCommand sqlSelect = new SqlCommand())
-                {
-                    sqlSelect.Connection = sqlConnection;
-                    sqlSelect.CommandText = @"SELECT PA.MIESIAC, ZK.ID_KONTA, ZK.ID_DOKUMENTU,PA.ID_PACZKI, PA.NUMER, KP.PELNE_KONTO, KP.NAZWA
-                                                FROM [T_FKD_ZAPIS_KSIEG] ZK
-                                                JOIN [T_FKD_KONT_PLAN] KP ON KP.ID_KONTA = ZK.ID_KONTA
-                                                JOIN [T_FKD_DOKUMENTY] DOK ON DOK.ID_DOKUMENTU = ZK.ID_DOKUMENTU
-                                                JOIN [T_FKD_PACZKA] PA ON PA.ID_PACZKI = DOK.ID_PACZKI
-                                                WHERE DOK.ID_DOKUMENTU = @IDdokumentu";
-                    sqlSelect.Parameters.AddWithValue("@IDdokumentu", IDdokumentu);
-                    TablicaKonta.Load(sqlSelect.ExecuteReader());
-
-                    MiesiacPaczki = TablicaKonta.Rows[0][0].ToString();
-                    IDkonta = TablicaKonta.Rows[0][1].ToString();
-                    IDdokumentu = TablicaKonta.Rows[0][2].ToString();
-                    IDpaczki = TablicaKonta.Rows[0][3].ToString();
-                    NrPaczki = TablicaKonta.Rows[0][4].ToString();
-                    KontoNR = TablicaKonta.Rows[0][5].ToString();
-                    NazwaKonta = TablicaKonta.Rows[0][6].ToString();
-                }
-                TablicaKonta = new DataTable();
                 using (SqlCommand sqlSelect = new SqlCommand())
                 {
                     sqlSelect.Connection = sqlConnection;
@@ -475,11 +446,31 @@ namespace GranitSkarbGUI
                 PerSaldoWnMa = Convert.ToDouble(TablicaKonta.Rows[0][0]);
             }
         }
-        #endregion
-        #endregion
 
+        private void PobierzDaneNaglowkowe(SqlConnection sqlConnectionn)
+        {
+            DataTable TablicaKonta = new DataTable();
+            sqlConnectionn.Open();
+            using (SqlCommand sqlSelect = new SqlCommand())
+            {
+                sqlSelect.Connection = sqlConnectionn;
+                sqlSelect.CommandText = @"SELECT PA.MIESIAC, ZK.ID_KONTA, ZK.ID_DOKUMENTU,PA.ID_PACZKI, PA.NUMER
+                                                FROM [T_FKD_ZAPIS_KSIEG] ZK
+                                                JOIN [T_FKD_KONT_PLAN] KP ON KP.ID_KONTA = ZK.ID_KONTA
+                                                JOIN [T_FKD_DOKUMENTY] DOK ON DOK.ID_DOKUMENTU = ZK.ID_DOKUMENTU
+                                                JOIN [T_FKD_PACZKA] PA ON PA.ID_PACZKI = DOK.ID_PACZKI
+                                                WHERE ZK.ID_ZAPISU = @IDzapisu";
+                sqlSelect.Parameters.AddWithValue("@IDzapisu", IDzapisu);
+                TablicaKonta.Load(sqlSelect.ExecuteReader());
 
-        #region Metody
+                MiesiacPaczki = TablicaKonta.Rows[0][0].ToString();
+                IDkonta = TablicaKonta.Rows[0][1].ToString();
+                IDdokumentu = TablicaKonta.Rows[0][2].ToString();
+                IDpaczki = TablicaKonta.Rows[0][3].ToString();
+                NrPaczki = TablicaKonta.Rows[0][4].ToString();
+            }
+        }
+
         private void Zapisy_z_Dokumentu(bool PrzodTyl_TF)
         {
             if (IndeksWiersza != _dataGridZapisy.Rows.Count - 1 && PrzodTyl_TF == true)
@@ -490,11 +481,25 @@ namespace GranitSkarbGUI
             {
                 IndeksWiersza -= 1;
             }
+
             if (_dataGridZapisy.Rows.Count != 0)
             {
-                IDzapisu = _dataGridZapisy.Rows[IndeksWiersza].Cells["ID_ZAPISU"].Value.ToString();
-                _dataGridZapisy.Rows[IndeksWiersza].Selected = false;
+                CzyPaczkaPerSaldo();
+            }
 
+            PrzesuwanieWidokuGrida();
+        }
+        private void CzyPaczkaPerSaldo()
+        {
+            IDzapisu = _dataGridZapisy.Rows[IndeksWiersza].Cells["ID_ZAPISU"].Value.ToString();
+            _dataGridZapisy.Rows[IndeksWiersza].Selected = false;
+
+            if (CzyPaczka == true && PerSaldo == true)
+            {
+                PobierzPerSaldoDokumentyPaczkaKsiegowe();
+            }
+            else if (CzyPaczka == false)
+            {
                 if (PerSaldo == false)
                 {
                     PobierzWinnMaWalZapisy();
@@ -505,6 +510,9 @@ namespace GranitSkarbGUI
                 }
             }
 
+        }
+        private void PrzesuwanieWidokuGrida()
+        {
             if (IndeksWiersza > _dataGridZapisy.DisplayedRowCount(false))
             {
                 int IndeksScroolWiersza = IndeksWiersza - _dataGridZapisy.DisplayedRowCount(false);
@@ -513,37 +521,8 @@ namespace GranitSkarbGUI
             _dataGridZapisy.ClearSelection();
             _dataGridZapisy.CurrentCell = _dataGridZapisy.Rows[IndeksWiersza].Cells[0];
             _dataGridZapisy.Rows[IndeksWiersza].Selected = true;
-            
         }
-        private void Zapisy_z_Paczki(bool PrzodTyl_TF)
-        {
-            if (IndeksWiersza != _dataGridPerSaldoDokumenty.Rows.Count - 1 && PrzodTyl_TF == true)
-            {
-                IndeksWiersza += 1;
-            }
-            else if (IndeksWiersza != 0 && PrzodTyl_TF == false)
-            {
-                IndeksWiersza -= 1;
-            }
 
-            if (_dataGridZapisy.Rows.Count != 0)
-            {
-                IDzapisu = _dataGridZapisy.Rows[0].Cells["ID_ZAPISU"].Value.ToString();
-                _dataGridPerSaldoDokumenty.Rows[IndeksWiersza].Selected = false;
-
-                PobierzPerSaldoDokumentyPaczkaKsiegowe();
-            }
-
-            if (IndeksWiersza > _dataGridPerSaldoDokumenty.DisplayedRowCount(false))
-            {
-                int IndeksScroolWiersza = IndeksWiersza - _dataGridPerSaldoDokumenty.DisplayedRowCount(false);
-                _dataGridPerSaldoDokumenty.FirstDisplayedScrollingRowIndex = IndeksScroolWiersza;
-            }
-            _dataGridPerSaldoDokumenty.ClearSelection();
-            _dataGridPerSaldoDokumenty.CurrentCell = _dataGridPerSaldoDokumenty.Rows[IndeksWiersza].Cells[0];
-            _dataGridPerSaldoDokumenty.Rows[IndeksWiersza].Selected = true;
-            
-        }
         #endregion
 
         #region Eventy
@@ -553,40 +532,18 @@ namespace GranitSkarbGUI
         {
             try
             {
-                if (CzyPaczka == false)
-                {
-                    Zapisy_z_Dokumentu(true);
-                }
-                else if (CzyPaczka == true)
-                {
-                    Zapisy_z_Paczki(true);
-                }
+                Zapisy_z_Dokumentu(true);
             }
             catch (Exception ex)
             {
                 DialogStatement.ShowError(ex.Message);
             }
-            #region DlaADVTree
-            //else if (NodeKonto.NextNode != null && CzyZapisKsiegowy == false && CzyADVTree == false)
-            //{
-            //    NodeKonto = NodeKonto.NextNode;
-            //    PobierzWinnMaWalADVtree();
-            //    //Konto.SelectedNode.NextNode;
-            //}
-            #endregion
         }
         private void granitButton5_Click(object sender, EventArgs e) // w tył
         {
             try
             {
-                if (CzyPaczka == false)
-                {
-                    Zapisy_z_Dokumentu(false);
-                }
-                else if (CzyPaczka == true)
-                {
-                    Zapisy_z_Paczki(false);
-                }
+                Zapisy_z_Dokumentu(false);
             }
             catch (Exception ex)
             {
@@ -608,8 +565,128 @@ namespace GranitSkarbGUI
         }
         #endregion
 
+        #region Brudnopis
+        #region ToSamoAleDla_ADV_Tree_W_Ksiedze_Glownej_Prawie_Działa
+        //        private void PobierzWinnMaWalADVtree()
+        //        {
+        //            KontoNR = Konto.SelectedNode.Cells["PELNE KONTO"].Text;
+        //            ZapisNR = _dataGridZapisy.Rows[IndeksWiersza].Cells[2].Value.ToString();
 
+        //            DataTable TablicaKonta = new DataTable();
+        //            using (SqlConnection sqlConnection = new SqlConnection(Databases.SkarbDB.ConnectionString))
+        //            {
+        //                SqlDataAdapter adapter = new SqlDataAdapter("", sqlConnection);
+        //                adapter.SelectCommand.CommandText = @"SELECT W.SYMBOL, W.[ID_WALUTY], ZK.WINIEN_WAL, ZK.MA_WAL   
+        //                                                                FROM [T_FKD_WALUTY] W
+        //                                                                JOIN [T_FKD_ZAPIS_KSIEG] ZK ON ZK.ID_WALUTY = W.[ID_WALUTY]
+        //                                                                JOIN [T_FKD_KONT_PLAN] KP ON KP.ID_KONTA = ZK.ID_KONTA
+        //                                                                WHERE KP.PELNE_KONTO = '" + KontoNR + "' and KP.NAZWA ='" + NazwaKonta + "'";
+        //                adapter.Fill(TablicaKonta);
+        //            }
+        //            Waluta = TablicaKonta.Rows[0][0].ToString() ?? "BRAK";
+        //            KOD = TablicaKonta.Rows[0][1].ToString() ?? "BRAK";
+        //            WinienWaluta = TablicaKonta.Rows[0][2].ToString() ?? "BRAK";
+        //            MaWaluta = TablicaKonta.Rows[0][3].ToString() ?? "BRAK";
 
+        //            _LabelStanWn.Text = WinienWaluta;
+        //            _LabelStanMa.Text = MaWaluta;
+        //            _LabelHeader.Text =
+        //                "<div align=\"center\">" +
+        //                "<font color=\"#602826\">Konto " + KontoNR + "</font><br/>" +
+        //                "<font color=\"#602826\">" + NazwaKonta + "</font><br/>" +
+        //                "<font color=\"#602826\">Waluta " + Waluta + "    KOD " + KOD + "</font>" +
+        //                "</div>";
+        //        }
+        #endregion
+        #region ADVstanKsiegi_WG_Poprzednikow
+        //private void PoprzednieKonto()
+        //{
+        //    try
+        //    {
+        //        if (NodeKonto.PrevNode == null) throw new GranitWarningException();
+        //        NodeKonto = NodeKonto.PrevNode;
+
+        //        PobierzKonto();
+
+        //        //OdswiezDane();
+        //    }
+        //    catch (GranitWarningException)
+        //    {
+        //        DialogStatement.Show("Brak poprzedniego konta na tym poziomie", DialogStatement.DialogType.Info);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        DialogStatement.ShowError(ex);
+        //    }
+        //}
+        //private void NastepneKonto()
+        //{
+        //    try
+        //    {
+        //        if (NodeKonto.NextNode == null) throw new GranitWarningException();
+        //        NodeKonto = NodeKonto.NextNode;
+
+        //        PobierzKonto();
+
+        //        //OdswiezDane();
+        //    }
+        //    catch (GranitWarningException)
+        //    {
+        //        DialogStatement.Show("Brak kolejnego konta na tym poziomie", DialogStatement.DialogType.Info);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        DialogStatement.ShowError(ex);
+        //    }
+        //}
+        //private void PobierzKonto()
+        //{
+
+        //    try
+        //    {
+        //        //Pobranie konta
+        //        Konto = new Konto(getIdKonta());
+
+        //        //Ustawienie Nagłówka
+        //        _LabelHeader.Text = "<div align=\"center\">" +
+        //            "<font color=\"#602826\">Stan Księgi na " + Miesiac.ToString().PadLeft(2, '0') + "/" + Konto["ROK"].ToString() + "<br/>" +
+        //            Konto["PELNE_KONTO"].ToString() + " " + Konto["PELNA_NAZWA"].ToString() +
+        //            "</font></div>";
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
+        //public int getIdKonta()
+        //{
+        //    try
+        //    {
+        //        int Idkonta = -1;
+
+        //        //Pobieramy id konta
+        //        foreach (DevComponents.AdvTree.ColumnHeader column in NodeKonto.TreeControl.Columns)
+        //        {
+        //            if (column.Text.ToUpper() == "ID KONTA")
+        //            {
+        //                Idkonta = Convert.ToInt32(NodeKonto.Cells[NodeKonto.TreeControl.Columns.IndexOf(column)].Text);
+        //            }
+
+        //        }
+
+        //        if (Idkonta == -1) throw new GranitWarningException("Nie znaleziono konta");
+
+        //        return Idkonta;
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
+        #endregion
+        #endregion
     }
 }
 
