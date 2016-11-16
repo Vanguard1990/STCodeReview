@@ -1,0 +1,80 @@
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonItem6_Click(object sender, EventArgs e)//# 22
+        {
+            _granitDataGridKontrahenci.EndEdit();
+            _bindingSourceKontrahenci.EndEdit();
+
+            SqlConnection conn = new SqlConnection(Databases.SkarbDB.ConnectionString);
+            SqlCommand cmd = conn.CreateCommand();
+            SqlTransaction trans = null;
+            try
+            {
+                if ((_granitDataGridKontrahenci.CurrentRow == null) || (_granitDataGridKontrahenci.CurrentRow.Index < 0))
+                {
+                    DialogStatement.ShowWarning("Nie wybrano żadnego kontrahenta");
+                    return;
+                }
+
+                int idKontrahenta = Convert.ToInt32(_granitDataGridKontrahenci.CurrentRow.Cells["ID_KONTRAHENTA"].Value);
+
+                conn.Open();
+
+                SqlDataAdapter adapter = new SqlDataAdapter(string.Format(@"SELECT ID_TRANSAKCJI
+FROM T_FKD_TRANSAKCJE 
+WHERE ODSETKI_WYSLANE IS NULL AND ID_KONTA IN (SELECT ID_KONTA_GLOBAL FROM T_FKD_KONT_PLAN WHERE ID_KART_KONTR=@ID_KONTRAHENTA AND PELNE_KONTO LIKE '{0}-%')
+AND TERMIN<(SELECT ISNULL(MAX(DATA_ZAPL),'1900-01-01') FROM T_FKD_ZAPIS_KSIEG WHERE T_FKD_ZAPIS_KSIEG.ID_TRANSAKCJI=T_FKD_TRANSAKCJE.ID_TRANSAKCJI AND MA>0) AND WINIEN=MA AND ID_TRANSAKCJI NOT IN (SELECT ID_TRANSAKCJI FROM T_FKD_TRANSAKCJE_NOTY_WIAZANIE)	", AppSettings.KontoNotOdsetkowych), Databases.SkarbDB.ConnectionString);
+
+                DataTable dtTransakcje = new DataTable();
+                adapter.SelectCommand.Parameters.AddWithValue("@ID_KONTRAHENTA", idKontrahenta);
+                adapter.Fill(dtTransakcje);
+
+                if (dtTransakcje.Rows.Count == 0)
+                {
+                    DialogStatement.ShowWarning("Ten kontrahent nie ma faktur do not odsetkowych");
+                    return;
+                }
+
+
+
+                if (DialogQuestion.Show("Wybrany kontrahent ma " + dtTransakcje.Rows.Count.ToString() + " zapłaconych faktur przeterminowanych do których można wystawić notę odsetkową.\nCzy chcesz wysłać żadanie noty odsetkowej?") == DialogResult.Yes)
+                {
+                    trans = conn.BeginTransaction();
+                    cmd.Transaction = trans;
+                    cmd.CommandText = @"INSERT INTO T_FKD_TRANSAKCJE_NOTY(DATA_ZADANIA,OPER_ZADANIE, STATUS, NR_NOTY,ID_KONTRAHENTA)
+                                        SELECT GETDATE(), @OPER, 'Wysłana propozycja', ISNULL(MAX(NR_NOTY)+1,1),@ID_KONTRAHENTA
+                                        FROM  T_FKD_TRANSAKCJE_NOTY; SELECT @@IDENTITY";
+                    cmd.Parameters.AddWithValue("@OPER", AppState.Oper);
+                    cmd.Parameters.AddWithValue("@ID_KONTRAHENTA", idKontrahenta);
+                    int idNoty = Convert.ToInt32(cmd.ExecuteScalar());
+
+                    foreach (DataRow dr in dtTransakcje.Rows)
+                    {
+                        int idTransakcji = Convert.ToInt32(dr["ID_TRANSAKCJI"]);
+                        cmd.CommandText = "INSERT INTO T_FKD_TRANSAKCJE_NOTY_WIAZANIE (ID_TRANSAKCJI, ID_NOTY) VALUES (@ID_TRANSAKCJI, @ID_NOTY)";
+                        cmd.Parameters.Clear();
+                        cmd.Parameters.AddWithValue("@ID_NOTY", idNoty);
+                        cmd.Parameters.AddWithValue("@ID_TRANSAKCJI", idTransakcji);
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    trans.Commit();
+                }
+            }
+            catch (Exception ex)
+            {
+                if (trans != null)
+                    trans.Rollback();
+                if (conn != null)
+                    conn.Close();
+                DialogStatement.ShowError("Problem w MDIDokumenty nr #22 >>> " + ex.Message);
+            }
+            finally
+            {
+                if (conn != null)
+                    conn.Close();
+            }
+        }
